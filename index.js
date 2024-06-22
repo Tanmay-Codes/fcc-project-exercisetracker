@@ -24,6 +24,15 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
 
+app.get("/api/users", async (req, res) => {
+  try {
+    const userList = await Users.find();
+    res.json(userList);
+  } catch (err) {
+    res.json(err);
+  }
+});
+
 app.post("/api/users", async (req, res) => {
   const userName = req.body.username;
   const newUser = new Users({
@@ -92,10 +101,10 @@ app.get("/api/users/:_id/logs", async (req, res) => {
         date: items.date,
       };
     });
-    console.log(logs);
+    const logsLength = logs.length;
     res.json({
       username: user.username,
-      count: exercises.count,
+      count: logsLength,
       _id: userId,
       log: logs,
     });
