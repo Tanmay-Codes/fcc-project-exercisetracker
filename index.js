@@ -7,7 +7,7 @@ const Users = require("./models/User");
 const Exercise = require("./models/Exercise");
 const { error } = require("console");
 require("dotenv").config();
-const data = [];
+app.use(cors());
 const uri = process.env.MONGO_URI;
 async function connectDb() {
   try {
@@ -18,7 +18,6 @@ async function connectDb() {
   }
 }
 connectDb();
-app.use(cors());
 app.use(express.static(__dirname + "/public/"));
 app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
