@@ -60,7 +60,7 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
       res.json({
         username,
         description,
-        duration,
+        duration: +duration,
         date: date ? new Date(date).toDateString() : dateObj.toDateString(),
         _id: userId,
       });
@@ -68,7 +68,6 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
       res.json({ error: "User not found" });
     }
   } catch (err) {
-    console.log(err);
     res.json({ code: 400, err: "something went wrong!" });
   }
 });
@@ -89,16 +88,14 @@ app.get("/api/users/:_id/logs", async (req, res) => {
     } else {
       filter.userId = userId;
     }
-    console.log(filter);
     const exercises = await Exercise.find(filter, "-userId -username").limit(
       +limit ?? 500
     );
-    console.log(exercises);
     const logs = exercises.map((items) => {
       return {
         description: items.description,
         duration: items.duration,
-        date: items.date,
+        date: items.date.toDateString(),
       };
     });
     const logsLength = logs.length;
@@ -109,7 +106,7 @@ app.get("/api/users/:_id/logs", async (req, res) => {
       log: logs,
     });
   } catch (err) {
-    console.log(err);
+    res.json(err);
   }
 });
 
